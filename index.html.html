@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CARS24 — User × Platform × Month Heatmap</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #0f1117; color: #e0e0e0; padding: 24px; }
+  h1 { font-size: 20px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+  .subtitle { font-size: 13px; color: #888; margin-bottom: 24px; }
+  .section-title { font-size: 15px; font-weight: 600; color: #ccc; margin: 32px 0 12px; border-left: 3px solid #e24b4a; padding-left: 10px; }
+  .stats-row { display: flex; gap: 12px; margin-bottom: 28px; flex-wrap: wrap; }
+  .stat-card { background: #1a1d27; border-radius: 10px; padding: 14px 18px; flex: 1; min-width: 140px; }
+  .stat-label { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+  .stat-value { font-size: 22px; font-weight: 700; margin-top: 4px; }
+  .stat-sub { font-size: 11px; color: #666; margin-top: 2px; }
+  table { border-collapse: collapse; width: 100%; font-size: 12px; }
+  th { background: #1a1d27; color: #aaa; font-weight: 600; padding: 8px 6px; text-align: center; position: sticky; top: 0; z-index: 2; font-size: 11px; text-transform: uppercase; letter-spacing: 0.3px; }
+  th:first-child, th:nth-child(2), th:nth-child(3) { text-align: left; }
+  td { padding: 6px; text-align: center; border-bottom: 1px solid #1e2130; font-variant-numeric: tabular-nums; }
+  td:first-child { text-align: center; color: #666; font-size: 11px; width: 32px; }
+  td:nth-child(2) { text-align: left; font-weight: 500; color: #ddd; white-space: nowrap; max-width: 160px; overflow: hidden; text-overflow: ellipsis; }
+  td:nth-child(3) { text-align: left; color: #999; font-size: 11px; }
+  .heat-0 { background: transparent; color: #444; }
+  .heat-1 { background: rgba(56,138,221,0.12); color: #6aafef; }
+  .heat-2 { background: rgba(56,138,221,0.22); color: #7dbbf4; }
+  .heat-3 { background: rgba(186,117,23,0.2); color: #d4a84a; }
+  .heat-4 { background: rgba(186,117,23,0.35); color: #e0b85a; }
+  .heat-5 { background: rgba(226,75,74,0.2); color: #f08a8a; }
+  .heat-6 { background: rgba(226,75,74,0.35); color: #f59a9a; }
+  .heat-7 { background: rgba(226,75,74,0.55); color: #fff; font-weight: 700; }
+  .total-col { font-weight: 700; color: #fff !important; }
+  .platform-tag { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 500; }
+  .p-twitter { background: rgba(56,138,221,0.15); color: #5da9e9; }
+  .p-linkedin { background: rgba(29,158,117,0.15); color: #3dbf8e; }
+  .p-facebook { background: rgba(216,90,48,0.15); color: #e8844a; }
+  .p-instagram { background: rgba(212,83,126,0.15); color: #e87aa0; }
+  .p-youtube { background: rgba(226,75,74,0.15); color: #f08a8a; }
+  .p-multi { background: rgba(186,117,23,0.15); color: #d4a84a; }
+  .legend { display: flex; gap: 16px; margin: 16px 0; flex-wrap: wrap; align-items: center; }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #888; }
+  .legend-box { width: 14px; height: 14px; border-radius: 3px; }
+  .table-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid #1e2130; }
+  .highlight-row:hover { background: rgba(255,255,255,0.03); }
+
+  .platform-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 28px; }
+  .plat-card { background: #1a1d27; border-radius: 8px; padding: 12px; text-align: center; }
+  .plat-card .plat-name { font-size: 12px; font-weight: 600; margin-bottom: 6px; }
+  .plat-card .plat-num { font-size: 20px; font-weight: 700; }
+  .plat-card .plat-users { font-size: 11px; color: #888; margin-top: 2px; }
+  .plat-bar { height: 3px; border-radius: 2px; margin-top: 8px; }
+</style>
+</head>
+<body>
+
+<h1>CARS24 — Ownership Transfer: User × Platform Heatmap</h1>
+<p class="subtitle">Top 30 repeat complainers · Dec'25 – Mar'26 · Social media complaint intensity by user, platform, and month</p>
+
+<div class="stats-row">
+  <div class="stat-card">
+    <div class="stat-label">Top 30 users</div>
+    <div class="stat-value" style="color:#e24b4a;">500+</div>
+    <div class="stat-sub">complaints generated</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Dominant platform</div>
+    <div class="stat-value" style="color:#5da9e9;">Twitter</div>
+    <div class="stat-sub">18 of 30 users</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Peak month</div>
+    <div class="stat-value" style="color:#ba7517;">Mar'26</div>
+    <div class="stat-sub">57.7% repeat share</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">4-month users</div>
+    <div class="stat-value" style="color:#7f77dd;">6</div>
+    <div class="stat-sub">active every month</div>
+  </div>
+</div>
+
+<div class="section-title">Platform distribution — where are complaints concentrated?</div>
+<div class="platform-summary">
+  <div class="plat-card">
+    <div class="plat-name" style="color:#5da9e9;">Twitter</div>
+    <div class="plat-num" style="color:#5da9e9;">18</div>
+    <div class="plat-users">users · 259 posts</div>
+    <div class="plat-bar" style="background:linear-gradient(90deg, #378ADD 100%, transparent 100%);"></div>
+  </div>
+  <div class="plat-card">
+    <div class="plat-name" style="color:#3dbf8e;">LinkedIn</div>
+    <div class="plat-num" style="color:#3dbf8e;">4</div>
+    <div class="plat-users">users · 129 posts</div>
+    <div class="plat-bar" style="background:linear-gradient(90deg, #1D9E75 50%, transparent 50%); width:100%;"></div>
+  </div>
+  <div class="plat-card">
+    <div class="plat-name" style="color:#e8844a;">Facebook</div>
+    <div class="plat-num" style="color:#e8844a;">3</div>
+    <div class="plat-users">users · 63 posts</div>
+    <div class="plat-bar" style="background:linear-gradient(90deg, #D85A30 33%, transparent 33%); width:100%;"></div>
+  </div>
+  <div class="plat-card">
+    <div class="plat-name" style="color:#e87aa0;">Instagram</div>
+    <div class="plat-num" style="color:#e87aa0;">2</div>
+    <div class="plat-users">users · 22 posts</div>
+    <div class="plat-bar" style="background:linear-gradient(90deg, #D4537E 22%, transparent 22%); width:100%;"></div>
+  </div>
+  <div class="plat-card">
+    <div class="plat-name" style="color:#f08a8a;">YouTube</div>
+    <div class="plat-num" style="color:#f08a8a;">1</div>
+    <div class="plat-users">user · 12 posts</div>
+    <div class="plat-bar" style="background:linear-gradient(90deg, #E24B4A 12%, transparent 12%); width:100%;"></div>
+  </div>
+  <div class="plat-card">
+    <div class="plat-name" style="color:#d4a84a;">Multi-platform</div>
+    <div class="plat-num" style="color:#d4a84a;">5</div>
+    <div class="plat-users">users · cross-posting</div>
+    <div class="plat-bar" style="background:linear-gradient(90deg, #BA7517 42%, transparent 42%); width:100%;"></div>
+  </div>
+</div>
+
+<div class="section-title">User × month complaint heatmap</div>
+
+<div class="legend">
+  <span style="font-size:11px; color:#666; margin-right:4px;">Intensity:</span>
+  <div class="legend-item"><div class="legend-box" style="background:transparent; border:1px solid #333;"></div>0</div>
+  <div class="legend-item"><div class="legend-box" style="background:rgba(56,138,221,0.15);"></div>1-2</div>
+  <div class="legend-item"><div class="legend-box" style="background:rgba(186,117,23,0.25);"></div>3-5</div>
+  <div class="legend-item"><div class="legend-box" style="background:rgba(226,75,74,0.25);"></div>6-9</div>
+  <div class="legend-item"><div class="legend-box" style="background:rgba(226,75,74,0.55);"></div>10+</div>
+</div>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+  <th>#</th>
+  <th>User</th>
+  <th>Platform</th>
+  <th>Dec'25</th>
+  <th>Jan'26</th>
+  <th>Feb'26</th>
+  <th>Mar'26</th>
+  <th>Total</th>
+  <th>Months</th>
+</tr>
+</thead>
+<tbody id="heatbody"></tbody>
+</table>
+</div>
+
+<div class="section-title" style="margin-top:32px;">Month-over-month escalation pattern</div>
+<div id="sparklines" style="margin-top:12px;"></div>
+
+<script>
+const users = [
+  {r:1,u:"Sanjoy Kumar Malik",p:"LinkedIn",d:[24,24,3,0],t:51,m:3},
+  {r:2,u:"Preet Kanwar Singh",p:"LinkedIn, Facebook",d:[25,14,9,1],t:49,m:4},
+  {r:3,u:"Sharduul Bahuguna",p:"Facebook",d:[10,12,4,0],t:26,m:3},
+  {r:4,u:"Sambhav52574694",p:"Twitter",d:[6,1,1,15],t:23,m:4},
+  {r:5,u:"Deepanshu Dhawan",p:"LinkedIn, Facebook",d:[0,0,5,17],t:22,m:2},
+  {r:6,u:"Ramkumar Gour",p:"Facebook",d:[5,15,0,1],t:21,m:3},
+  {r:7,u:"RakeshAmbati16",p:"Twitter",d:[5,1,6,6],t:18,m:4},
+  {r:8,u:"DeepakT85230248",p:"Twitter",d:[0,0,8,9],t:17,m:2},
+  {r:9,u:"vakeelsahb91",p:"Twitter",d:[0,0,0,17],t:17,m:1},
+  {r:10,u:"mriyahamed",p:"Twitter",d:[1,1,2,12],t:16,m:4},
+  {r:11,u:"Mukesh Vadera",p:"Facebook",d:[12,1,0,3],t:16,m:3},
+  {r:12,u:"adityakul20",p:"Twitter",d:[0,0,11,4],t:15,m:2},
+  {r:13,u:"Navin Munjal",p:"LinkedIn",d:[0,0,5,9],t:14,m:2},
+  {r:14,u:"Mohit_kmwt",p:"Twitter",d:[0,5,5,3],t:13,m:3},
+  {r:15,u:"harsh_dharni",p:"Twitter",d:[8,1,0,4],t:13,m:3},
+  {r:16,u:"bharatdanani",p:"Instagram",d:[5,7,0,0],t:12,m:2},
+  {r:17,u:"blitheolic",p:"Twitter",d:[4,0,8,0],t:12,m:2},
+  {r:18,u:"@ankushohlan",p:"YouTube",d:[0,3,4,5],t:12,m:3},
+  {r:19,u:"VaishaliAg34180",p:"Twitter",d:[0,0,1,11],t:12,m:2},
+  {r:20,u:"UTDEL",p:"Twitter",d:[0,0,0,11],t:11,m:1},
+  {r:21,u:"kiran391",p:"Twitter",d:[0,1,1,8],t:10,m:3},
+  {r:22,u:"Yashdeep Gupta",p:"LinkedIn, Facebook",d:[0,7,3,0],t:10,m:2},
+  {r:23,u:"NEERAJ20091984",p:"Twitter",d:[6,3,0,1],t:10,m:3},
+  {r:24,u:"bhkvora2011",p:"Twitter",d:[0,0,4,6],t:10,m:2},
+  {r:25,u:"sn76sharma",p:"Twitter, Instagram",d:[0,0,9,1],t:10,m:2},
+  {r:26,u:"vivekahuja31",p:"Twitter",d:[1,1,8,0],t:10,m:3},
+  {r:27,u:"dr.vaishaliagrawal",p:"Instagram",d:[0,0,5,5],t:10,m:2},
+  {r:28,u:"neelaksh0410",p:"Twitter",d:[0,0,5,4],t:9,m:2},
+  {r:29,u:"Kirti Khandelwal",p:"LinkedIn",d:[0,2,7,0],t:9,m:2},
+  {r:30,u:"tripathiraunak",p:"Twitter",d:[3,1,2,3],t:9,m:4},
+];
+
+function heatClass(v) {
+  if (v === 0) return 'heat-0';
+  if (v <= 1) return 'heat-1';
+  if (v <= 2) return 'heat-2';
+  if (v <= 4) return 'heat-3';
+  if (v <= 5) return 'heat-4';
+  if (v <= 8) return 'heat-5';
+  if (v <= 9) return 'heat-6';
+  return 'heat-7';
+}
+
+function platClass(p) {
+  const pl = p.toLowerCase();
+  if (pl.includes(',')) return 'p-multi';
+  if (pl.includes('twitter')) return 'p-twitter';
+  if (pl.includes('linkedin')) return 'p-linkedin';
+  if (pl.includes('facebook')) return 'p-facebook';
+  if (pl.includes('instagram')) return 'p-instagram';
+  if (pl.includes('youtube')) return 'p-youtube';
+  return 'p-twitter';
+}
+
+const tbody = document.getElementById('heatbody');
+users.forEach(u => {
+  const tr = document.createElement('tr');
+  tr.className = 'highlight-row';
+  tr.innerHTML = `
+    <td>${u.r}</td>
+    <td>${u.u}</td>
+    <td><span class="platform-tag ${platClass(u.p)}">${u.p}</span></td>
+    <td class="${heatClass(u.d[0])}">${u.d[0] || '–'}</td>
+    <td class="${heatClass(u.d[1])}">${u.d[1] || '–'}</td>
+    <td class="${heatClass(u.d[2])}">${u.d[2] || '–'}</td>
+    <td class="${heatClass(u.d[3])}">${u.d[3] || '–'}</td>
+    <td class="total-col">${u.t}</td>
+    <td style="color:${u.m>=4?'#e24b4a':u.m>=3?'#d4a84a':'#888'}">${u.m}</td>
+  `;
+  tbody.appendChild(tr);
+});
+
+// Sparkline patterns
+const patterns = [
+  { label: "Escalating (quiet → explosive)", color: "#e24b4a", users: users.filter(u => u.d[3] > u.d[0] + 5 && u.d[3] >= 8) },
+  { label: "De-escalating (loud → quiet)", color: "#1D9E75", users: users.filter(u => u.d[0] > u.d[3] + 5 && u.d[0] >= 8) },
+  { label: "Persistent (active every month)", color: "#d4a84a", users: users.filter(u => u.m >= 4) },
+  { label: "Burst (concentrated in 1 month)", color: "#7f77dd", users: users.filter(u => u.m <= 1 && u.t >= 10) },
+];
+
+const sparkDiv = document.getElementById('sparklines');
+patterns.forEach(p => {
+  if (p.users.length === 0) return;
+  const names = p.users.map(u => u.u).join(', ');
+  const div = document.createElement('div');
+  div.style.cssText = 'display:flex;align-items:center;gap:10px;margin-bottom:10px;padding:10px 14px;background:#1a1d27;border-radius:8px;border-left:3px solid '+p.color;
+  div.innerHTML = `
+    <div style="min-width:220px;">
+      <div style="font-size:12px;font-weight:600;color:${p.color}">${p.label}</div>
+      <div style="font-size:11px;color:#888;margin-top:2px;">${p.users.length} user${p.users.length>1?'s':''}</div>
+    </div>
+    <div style="flex:1;font-size:11px;color:#aaa;line-height:1.6;">${names}</div>
+    <div style="display:flex;gap:4px;align-items:end;height:32px;">
+      ${p.users.slice(0,3).map(u => {
+        const max = Math.max(...u.d, 1);
+        return u.d.map((v,i) => `<div style="width:6px;height:${Math.max(2, v/max*28)}px;background:${p.color};opacity:${0.4+i*0.2};border-radius:1px;"></div>`).join('');
+      }).join('<div style="width:6px;"></div>')}
+    </div>
+  `;
+  sparkDiv.appendChild(div);
+});
+
+// Platform heatmap
+const platSection = document.createElement('div');
+platSection.innerHTML = '<div class="section-title" style="margin-top:32px;">Platform × month heatmap</div>';
+sparkDiv.after(platSection);
+
+const platData = [
+  {p:'Twitter', d:[54,17,79,109], users:18, color:'#378ADD'},
+  {p:'LinkedIn', d:[49,40,24,10], users:4, color:'#1D9E75'},
+  {p:'Facebook', d:[27,27,4,4], users:3, color:'#D85A30'},
+  {p:'Instagram', d:[5,7,5,5], users:2, color:'#D4537E'},
+  {p:'YouTube', d:[0,3,4,5], users:1, color:'#E24B4A'},
+  {p:'Multi-plat', d:[25,21,17,18], users:5, color:'#BA7517'},
+];
+
+const platTable = document.createElement('div');
+platTable.style.cssText = 'margin-top:12px;';
+platData.forEach(pl => {
+  const total = pl.d.reduce((a,b)=>a+b,0);
+  const max = Math.max(...pl.d, 1);
+  const row = document.createElement('div');
+  row.style.cssText = 'display:flex;align-items:center;gap:8px;padding:8px 14px;background:#1a1d27;border-radius:8px;margin-bottom:6px;';
+  row.innerHTML = `
+    <div style="min-width:100px;font-size:13px;font-weight:600;color:${pl.color};">${pl.p}</div>
+    <div style="min-width:60px;font-size:11px;color:#888;">${pl.users} user${pl.users>1?'s':''}</div>
+    <div style="display:flex;gap:3px;flex:1;align-items:end;height:36px;">
+      ${pl.d.map((v,i) => `
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
+          <div style="font-size:10px;color:#888;">${v}</div>
+          <div style="width:100%;height:${Math.max(3, v/max*28)}px;background:${pl.color};border-radius:2px;opacity:${0.5+i*0.15};"></div>
+          <div style="font-size:9px;color:#555;">` + ["D","J","F","M"][i] + `</div>
+        </div>
+      `).join('')}
+    </div>
+    <div style="min-width:50px;text-align:right;font-size:14px;font-weight:700;color:${pl.color};">${total}</div>
+  `;
+  platTable.appendChild(row);
+});
+platSection.after(platTable);
+
+</script>
+</body>
+</html>
